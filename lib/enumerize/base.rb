@@ -57,7 +57,7 @@ module Enumerize
 
     def initialize(*)
       super
-      _set_default_value_for_enumerized_attributes
+      #_set_default_value_for_enumerized_attributes
     end
 
     def read_attribute_for_validation(key)
