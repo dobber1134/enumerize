@@ -94,7 +94,7 @@ module Enumerize
         # remove after dropping support for Rails 3.x
         # https://github.com/brainspec/enumerize/issues/101
         begin
-          attr_value = public_send(attr.name)
+          #attr_value = public_send(attr.name)
         rescue ActiveModel::MissingAttributeError
           next
         end
