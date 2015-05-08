@@ -57,7 +57,7 @@ module Enumerize
 
     def initialize(*)
       super
-      #_set_default_value_for_enumerized_attributes
+      _set_default_value_for_enumerized_attributes
     end
 
     def read_attribute_for_validation(key)
@@ -91,24 +91,26 @@ module Enumerize
 
     def _set_default_value_for_enumerized_attributes
       self.class.enumerized_attributes.each do |attr|
-        # remove after dropping support for Rails 3.x
-        # https://github.com/brainspec/enumerize/issues/101
-        begin
-          #attr_value = public_send(attr.name)
-        rescue ActiveModel::MissingAttributeError
-          next
-        end
-
-        value_for_validation = _enumerized_values_for_validation[attr.name.to_s]
-
-        if (!attr_value || attr_value.empty?) && (!value_for_validation || value_for_validation.empty?)
-          value = attr.default_value
-
-          if value.respond_to?(:call)
-            value = value.arity == 0 ? value.call : value.call(self)
+        if attr.default_value.present?
+          # remove after dropping support for Rails 3.x
+          # https://github.com/brainspec/enumerize/issues/101
+          begin
+            #attr_value = public_send(attr.name)
+          rescue ActiveModel::MissingAttributeError
+            next
           end
-
-          public_send("#{attr.name}=", value)
+  
+          value_for_validation = _enumerized_values_for_validation[attr.name.to_s]
+  
+          if (!attr_value || attr_value.empty?) && (!value_for_validation || value_for_validation.empty?)
+            value = attr.default_value
+  
+            if value.respond_to?(:call)
+              value = value.arity == 0 ? value.call : value.call(self)
+            end
+  
+            public_send("#{attr.name}=", value)
+          end
         end
       end
     end
